@@ -53,3 +53,16 @@ def test_changed_uncertain_reasons():
                                               {"state": "uncertain", "reasons": ["연석경사로 끝 턱 20 mm"]}]}
     new = {("A", "power"): r3(fast, route("uncertain", 10, "fast"), route("uncertain", 10, "fast"))}
     assert summarize(legacy, new)["changed"] == [["A", "power", "ok", "uncertain", ["연석경사로 끝 턱 20 mm"]]]
+
+
+def test_changed_table_header_says_reason_after_change():
+    """바뀐 곳에는 '막힘'이 아니라 '확인 필요'로 바뀐 것도 있어 표 머리는 '바뀐 뒤 이유'(11/21 미룬 것, 11/22)."""
+    import route3_report as RR
+    s = {"site": "t", "start": "정문", "n_dest": 1, "weights_version": "x",
+         "legacy_counts": {"manual": {"ok": 1, "uncertain": 0, "none": 0}},
+         "counts": {"fast": {"manual": {"ok": 0, "uncertain": 1, "none": 0}}},
+         "changed": [["가", "manual", "ok", "uncertain", ["턱 높이 모름"]]],
+         "differ": {"manual": {"all_same": 1, "any_diff": 0, "len20": 0}}, "same_zero": {"manual": 0},
+         "entry": {"manual": {"ok": 1}}, "demo": []}
+    md = RR.to_md([s])
+    assert "| 도착 | 유형 | 전 | 후 | 바뀐 뒤 이유 |" in md and "막힌 이유 |" not in md

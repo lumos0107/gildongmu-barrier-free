@@ -163,7 +163,7 @@ def test_bad_weights_raise(tmp_path, bad):
 
 def test_unknown_key_raises(tmp_path):
     f = tmp_path / "w.json"
-    f.write_text(json.dumps({"version": "x", "routes": {"comfort": {"slopee": 1.0}}, "mode_mult": {}}), encoding="utf-8")
+    f.write_text(json.dumps({"version": "x", "routes": {"fast": {}, "comfort": {"slopee": 1.0}, "safe": {}}, "mode_mult": {}}), encoding="utf-8")
     with pytest.raises(ValueError):
         load_weights(f)
     with pytest.raises(ValueError):
@@ -184,3 +184,31 @@ def test_driveway_safe_only_weight():
     dw = {"type": "driveway", "s": 10.0, "s_end": None, "cross": 4.0, "bump_mm": 0}
     it = seg(values=[v(0.0, s=10.0, cross=3.0)], barriers=[dw])
     assert cost(it, 0.0, 20.0, ww=w(driveway=10.0))[1] == {"driveway": 10.0}
+
+
+# ── 11/21 미룬 입력 검사(남은 일 계획 ④-가 1), 2026-11-22) ──────────────────────
+def test_effective_rejects_unknown_route_or_mode():
+    w = {"routes": {"fast": {}, "comfort": {"long": 1.0}, "safe": {}}, "mode_mult": {}}
+    with pytest.raises(ValueError):
+        effective(w, "comfrot", "manual")
+    with pytest.raises(ValueError):
+        effective(w, "comfort", "walker")
+
+
+def test_load_weights_requires_all_routes(tmp_path):
+    p = tmp_path / "w.json"
+    p.write_text(json.dumps({"routes": {"fast": {}, "comfort": {"long": 1.0}}}), encoding="utf-8")
+    with pytest.raises(ValueError):
+        load_weights(p)
+
+
+def test_personal_must_be_mapping():
+    w = {"routes": {"fast": {}, "comfort": {"long": 1.0}, "safe": {}}}
+    with pytest.raises(ValueError):
+        effective(w, "comfort", "manual", ["long", 2.0])
+
+
+def test_effective_rejects_overflow():
+    w = {"routes": {"fast": {}, "comfort": {"long": 1e200}, "safe": {}}, "mode_mult": {"manual": {"long": 1e200}}}
+    with pytest.raises(ValueError):
+        effective(w, "comfort", "manual")

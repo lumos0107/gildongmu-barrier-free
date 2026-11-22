@@ -30,6 +30,8 @@ def _num(x, where):
 
 
 def _check_map(d, where):
+    if d is not None and not isinstance(d, dict):
+        raise ValueError(f"{where}는 {{키: 수}} 모양이어야 함: {type(d).__name__}")
     for k, x in (d or {}).items():
         if k not in KEYS:
             raise ValueError(f"모르는 가중치 키: {where}.{k}")
@@ -49,18 +51,29 @@ def load_weights(path) -> dict:
     for k in wt.get("why", {}):
         if k not in KEYS:
             raise ValueError(f"모르는 근거 키: why.{k}")
+    missing = [r for r in ROUTES if r not in wt.get("routes", {})]
+    if missing:  # 빠진 길은 계수 0(= 거리만)으로 조용히 바뀌므로 막는다(2026-11-22)
+        raise ValueError(f"가중치 파일에 없는 길: {missing}")
     return wt
 
 
 def effective(weights: dict, route: str, mode: str, personal: dict | None = None) -> dict:
-    """길 · 이동 유형 · 사람별 배수를 곱한 실제 계수(모든 키)."""
+    """길 · 이동 유형 · 사람별 배수를 곱한 실제 계수(모든 키). 모르는 길 · 유형 이름, 무한대가 되는 곱은 막는다(2026-11-22)."""
+    if route not in ROUTES:
+        raise ValueError(f"모르는 길 이름: {route}")
+    if mode not in MODES:
+        raise ValueError(f"모르는 이동 유형: {mode}")
     base = weights.get("routes", {}).get(route, {})
     mult = weights.get("mode_mult", {}).get(mode, {})
     _check_map(base, f"routes.{route}")
     _check_map(mult, f"mode_mult.{mode}")
     _check_map(personal, "personal")
     personal = personal or {}
-    return {k: float(base.get(k, 0.0)) * float(mult.get(k, 1.0)) * float(personal.get(k, 1.0)) for k in KEYS}
+    out = {k: float(base.get(k, 0.0)) * float(mult.get(k, 1.0)) * float(personal.get(k, 1.0)) for k in KEYS}
+    bad = [k for k, x in out.items() if not math.isfinite(x)]
+    if bad:
+        raise ValueError(f"계수가 유한하지 않음: {route}·{mode} {bad}")
+    return out
 
 
 # ── 자료에서 범위 · 점 뽑기 ───────────────────────────────────────────────────
@@ -106,8 +119,9 @@ def _in_closed(s, lo, hi):
     return s is not None and lo - EPS <= s <= hi + EPS
 
 
-def piece_cost(items, mode, lo, hi, forward, j, w) -> tuple:
-    """조각 [lo, hi] (forward면 lo→hi로 지남)의 (비용, 항목별 벌점). 비용 = (hi − lo) + 벌점 합. j는 바꾸지 않는다."""
+def piece_cost(items, mode, lo, hi, forward, j, w, terms=None) -> tuple:
+    """조각 [lo, hi] (forward면 lo→hi로 지남)의 (비용, 항목별 벌점). 비용 = (hi − lo) + 벌점 합. j는 바꾸지 않는다.
+    terms(목록)를 주면 가중치 곱하기 전 (키, 값)을 나온 순서대로 붙인다(앱 길찾기 내보내기용, 2026-11-22). 결과는 같다."""
     lo, hi = min(lo, hi), max(lo, hi)
     length = hi - lo
     if length < EPS:
@@ -116,6 +130,8 @@ def piece_cost(items, mode, lo, hi, forward, j, w) -> tuple:
     bd = {}
 
     def add(k, x):
+        if terms is not None:
+            terms.append((k, x))
         x = x * w.get(k, 0.0)
         if x > EPS:
             bd[k] = bd.get(k, 0.0) + x

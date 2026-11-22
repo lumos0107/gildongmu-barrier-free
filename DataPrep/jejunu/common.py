@@ -28,7 +28,7 @@ SITE = "jejunu1000"
 SITE_DIR = DATA / SITE
 SRC_DIR = DATA / "jejunu"
 MAP1000 = SRC_DIR / "온라인자료" / "수치지형도_1000_20도엽"
-MAP5000 = pathlib.Path(r"C:\Users\seungjun\Documents\work\논문\정보기술학회\데이터\원본\국토정보맵\연속수치지도_제주_20261109\풀기")
+MAP5000 = pathlib.Path(r"C:\Users\seungjun\Documents\work\자료\국토정보맵\연속수치지도_제주_20261109\풀기")
 EVENING = BF / "Barrier-free-information-gathering-app" / "tools"
 PACK_DIR = DATA / "측정앱자료"
 OUT = HERE / "out"
@@ -183,7 +183,7 @@ def campus_zone(buffer_m=30.0) -> Polygon:
 
 
 # ---------------------------------------------------------------------------
-# 1:5,000 연속수치지형도(2024, 논문 폴더) — EPSG:5179를 5186으로
+# 1:5,000 연속수치지형도(2024) — EPSG:5179를 5186으로
 # ---------------------------------------------------------------------------
 def load_5000(layer: str, zone) -> list:
     out = []
