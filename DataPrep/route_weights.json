@@ -1,0 +1,33 @@
+{
+ "version": "2026-11-21a",
+ "note": "벌점은 '더 걷는 미터'. 길이 비례 키는 단위 없음, long·cross는 1/°(넘는 각도 × 조각 길이), fac_slope는 m/°, 나머지는 m/건. 가상 자료로만 정한 첫 값이라 실측 뒤 다시 본다. 표: Docs/2026-11-21-가중치표.md",
+ "routes": {
+  "fast": {},
+  "comfort": {"long": 1.0, "cross": 1.0, "surface_bad": 0.5, "surface_very_bad": 1.5, "fac_slope": 5, "bump_low": 15,
+              "narrow_len": 0.5, "narrow_point": 10, "narrow_point_long": 30, "climb_no_rest": 20},
+  "safe": {"shared": 0.3, "drop": 1.0, "drop_open": 1.0, "driveway": 10, "uncertain": 30, "cross_unknown": 2}
+ },
+ "mode_mult": {
+  "manual": {"long": 1.5, "cross": 1.5, "surface_bad": 1.5, "surface_very_bad": 1.5},
+  "power": {"long": 0.5, "cross": 0.5, "narrow_len": 1.5, "narrow_point": 1.5, "narrow_point_long": 1.5},
+  "stroller": {"surface_bad": 1.5, "surface_very_bad": 1.5, "bump_low": 1.5}
+ },
+ "why": {
+  "long": "앞뒤 경사 원칙 1/18(3.2°)을 넘는 만큼. 1°를 넘을 때마다 그 길이만큼 더 걷는 셈(매뉴얼 기준 환산표)",
+  "cross": "좌우 기울기 1/25(2.3°)를 넘는 만큼, 앞뒤와 같은 크기(매뉴얼 기준 환산표)",
+  "surface_bad": "거침 등급 길이의 절반만큼 더(매뉴얼 노면 등급, 수동휠체어 기준)",
+  "surface_very_bad": "못 감 등급은 길이의 1.5배 더(막히지 않는 유형만 비용으로 받음)",
+  "fac_slope": "본선 경사로·연석경사로가 3.2°를 넘는 1°마다 5 m(유아차처럼 판정이 막지 않는 유형의 부담)",
+  "bump_low": "13~17 mm 턱 하나를 15 m 돌아가는 것과 같게(매뉴얼 기록 시작 13 mm, 18 mm부터는 판정이 불확실)",
+  "narrow_len": "폭 1.5 m 미만이고 비켜설 곳이 없는 길은 길이의 절반만큼 더(매뉴얼 비켜설 곳 1.5 m)",
+  "narrow_point": "1.5 m보다 좁아지는 한 점 10 m",
+  "narrow_point_long": "좁은 곳이 5 m 넘게 이어지면 30 m",
+  "climb_no_rest": "3.2° 이상 오르막이 30 m 넘게 이어지는데 위에 쉬는 평지가 없으면 20 m(매뉴얼 7장 쉬는 평지)",
+  "shared": "차량과 함께 쓰는 길은 길이의 0.3배(민속촌 2.7 km·제주대 7.9 km라 크면 길을 독차지)",
+  "drop": "낙차 옆 길이만큼 더(매뉴얼 7장 위험 지점)",
+  "drop_open": "난간·턱이 없고 낙차 쪽으로 기울면 길이만큼 한 번 더",
+  "driveway": "차량 진출입부 좌우 기울기가 2.3°를 넘으면 한 곳당 10 m(같은 자리 좌우 벌점과 겹치면 하나만)",
+  "uncertain": "확인 안 된 조각 하나에 30 m(안전한 길만, '갈 수 있음' 길이 없을 때 차이를 만듦)",
+  "cross_unknown": "좌우 기울기를 못 잰 지점 하나에 2 m(안전한 길만)"
+ }
+}
