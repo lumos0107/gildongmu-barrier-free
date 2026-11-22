@@ -1,0 +1,10 @@
+# Python 3.10 이상. 경로 엔진 핵심(route_engine.py, route_cost.py)은 표준 라이브러리만 쓴다.
+# 아래는 자료 처리(제주대 연결망·지형·3D 설계도)와 시험에 필요한 패키지.
+numpy
+scipy
+shapely>=2.0
+pillow
+opencv-python
+pyproj
+pyshp
+pytest
