@@ -20,11 +20,11 @@
 
 국가 공개 지도로 만든 제주대학교 3D 맵과 추천 경로 (위: 전체, 아래: 확대)
 
-<img src="docs/images/app_measure_and_route.jpg" width="720">
+<img src="docs/images/app_measure_and_route.jpg" width="860">
 
-<img src="docs/images/app_route_result.jpg" width="480">
+<img src="docs/images/app_route_result.jpg" width="430">
 
-이동 유형에 맞춘 추천 길과 그 이유, 갈 수 있는 길이 없을 때 막힌 이유를 알려 주는 추천 앱 화면 (시제품)
+제주대학교 지도를 넣은 측정 앱과 추천 앱 화면입니다. 추천 앱은 이동 유형에 맞춘 추천 길과 그 이유를 보여 주고, 갈 수 있는 길이 없으면 막힌 이유를 알려 줍니다. 경사·턱 값은 실측 전이라 가상 값으로 계산했습니다. 추천 앱은 엔진 결과를 넣어 만든 웹 시제품이며, 지도 자료가 함께 들어 있어 이 저장소에는 넣지 않았습니다.
 
 ## 경로를 고르는 방법
 
